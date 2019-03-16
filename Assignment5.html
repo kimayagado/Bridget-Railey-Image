@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dynamic Canvas</title>
+        <style>
+            body {
+                margin: 0;
+                width:  100%;
+                height: 100%;
+            }
+            #my-canvas{position: absolute;top:0;left: 0}
+            #innerCanvas{position: absolute;top:40;left: 40;background-color: #FFFFFF;}
+            /*scale()
+            load and resize events on the window object
+            var canvas = document.querySelector('canvas');
+            var ctx = canvas.getContext('2d');
+            http://htmlcheats.com/html/resize-the-html5-canvas-dyamically */
+
+
+        </style>
+    </head>
+    <body>
+        <canvas id="my-canvas" style="border:1px solid #d3d3d3;"></canvas>
+      
+        <script>
+            var canvas = document.getElementById('my-canvas');
+            function resize() {
+                wid = window.innerWidth;
+                heit = window.innerHeight; //Screen height
+
+                console.log("width"+wid+"Height"+heit);
+                ratio = wid/heit;
+                console.log("ratio"+ratio);
+                wid = heit * ratio;
+                console.log("width"+wid+"Height"+heit);
+                canvas.style.width = wid+'px';
+                canvas.style.height = heit+'px';
+                /*canvas.width = document.documentElement.clientWidth;canvas.height = document.documentElement.clientHeight;*/
+
+                draw();
+            }
+            window.addEventListener('load', resize, false);
+            window.addEventListener('resize', resize, false);
+            window.onload = function () {
+                squeeze();
+            }
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            context = canvas.getContext("2d");
+            context.fillStyle = "#000000";
+            function draw(){
+                sideSquare = 30;
+                xAxis = 0;
+                yAxis = 0;
+                blocksCount = canvas.height / 10;
+                for(i=0, n=0;i<canvas.width;i+=(canvas.width /35),n++){
+                    for(j=0;j<blocksCount;j++) {
+                        context.fillRect(xAxis, yAxis, sideSquare, sideSquare);
+                        xAxis += (2* sideSquare);
+                    }
+                    if(n%2 == 0) xAxis = sideSquare;
+                    else xAxis = 0;
+                    yAxis += sideSquare;
+                }
+            }
+            draw();
+            
+
+               
+
+           
+        </script>
+    </body>
+</html>

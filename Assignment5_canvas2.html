@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dynamic Canvas</title>
+        <style>
+            body {
+                margin: 0;
+                width:  100%;
+                height: 100%;
+                overflow: hidden;
+                overflow-x: hidden;
+                overflow-y: hidden;
+            }
+            #my-canvas{position: absolute; top:0; left: 0}
+
+            /*.avatar:hover {
+                animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+                transform: translate3d(0, 0, 0);
+                backface-visibility: hidden;
+                perspective: 1000px;
+            }
+            @keyframes shake {
+                10%, 90% {
+                    transform: translate3d(-1px, 0, 0);
+                }
+
+                20%, 80% {
+                    transform: translate3d(2px, 0, 0);
+                }
+
+                30%, 50%, 70% {
+                    transform: translate3d(-4px, 0, 0);
+                }
+
+                40%, 60% {
+                    transform: translate3d(4px, 0, 0);
+                }
+            }*/
+            div {
+                width: 50px;
+                height: 50px;
+                background: orange;
+                float: left;
+            }
+        </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <canvas class="avatar orangeEffect" id="my-canvas" style="border:1px solid #d3d3d3;"></canvas>
+        <script>
+
+            var cX=0,cY=0;
+            function repeatOften() {
+                $("<div />").appendTo("body");
+                requestAnimationFrame(repeatOften);
+            }
+            var canvas = document.getElementById('my-canvas');
+            function resize() {
+                wid = window.innerWidth;
+                heit = window.innerHeight; //Screen height
+                ratio = wid/heit;
+                wid = heit * ratio;
+                canvas.style.width = wid+'px';
+                canvas.style.height = heit+'px';
+            }
+            window.addEventListener('load', resize, false);
+            window.addEventListener('resize', resize, false);
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            context = canvas.getContext("2d");
+            context.fillStyle = "#000000";
+            function draw(e1,e2){
+                sideSquare = 50;
+                xAxis = e1;
+                yAxis = e2;
+                horizontalblocksCount = Math.floor(canvas.width / 50);
+                verticleblocksCount = Math.round(canvas.height / 50);
+                for(i=0, n=0;i<verticleblocksCount;i++,n++){
+                    for(j=0;j<horizontalblocksCount;j++) {
+                        context.fillRect(xAxis, yAxis, sideSquare, sideSquare);
+                        xAxis += (2* sideSquare);
+                    }
+                    if(n%2 == 0) xAxis = sideSquare;
+                    else xAxis = 0;
+                    yAxis += sideSquare;
+                }
+            }
+
+            draw(0,0);
+            window.addEventListener("devicemotion",handleMotionEvent,true);
+            var myVar;
+            function handleMotionEvent(event){
+                var x=event.accelerationIncludingGravity.x;
+                var y=event.accelerationIncludingGravity.y;
+                var z=event.accelerationIncludingGravity.z;
+                console.log("handlemotion:",x,y,z);
+                cX += x;
+                cY += y;
+
+
+                myVar = setInterval(drawAgain(cX,cY), 700000);
+                //window.requestAnimationFrame(setTimeout(drawAgain(cX,cY), 70000));
+                //requestAnimationFrame(repeatOften);
+            }
+            function drawAgain(e1,e2){
+                context.clearRect(0,0,window.innerWidth,window.innerHeight);
+                alert("Canvas is redrawn");
+                sideSquare = 50;
+                gap1 = e1;
+                gap2 = e2;
+                xAxis = 0;
+                yAxis = 0;
+                horizontalblocksCount = Math.floor(canvas.width / 50);
+                verticleblocksCount = Math.round(canvas.height / 50);
+                console.log(horizontalblocksCount);
+                console.log(verticleblocksCount);
+                for(i=0, n=0;i<verticleblocksCount;i++,n++){
+                    for(j=0;j<horizontalblocksCount;j++) {
+                        context.fillRect(xAxis, yAxis, sideSquare, sideSquare);
+                        //alert("x:"+xAxis+ "y:" + yAxis);
+                        xAxis += gap1 + (2* sideSquare);
+                    }
+                    if(n%2 == 0) xAxis = sideSquare;
+                    else xAxis = 0;
+                    yAxis += gap2 + sideSquare;
+                }
+            }
+            curveWidth=canvas.width;
+            curveHeight=canvas.height;
+            context.lineWidth=5;
+            context.moveTo(0, 0);
+            context.quadraticCurveTo(canvas.width/2,canvas.height/2,canvas.width,0);
+            context.moveTo(canvas.width, 0);
+            context.quadraticCurveTo(canvas.width/1.6,canvas.height/2,canvas.width,canvas.height);
+
+            context.moveTo(canvas.width, canvas.height);
+            context.quadraticCurveTo(canvas.width/2,canvas.height/2,0,canvas.height);
+
+            context.moveTo(0, 0);
+            context.quadraticCurveTo(canvas.width/3,canvas.height/2,0,canvas.height);
+            context.strokeStyle = "red";
+            context.stroke();
+            //context.bezierCurveTo(0, 150,curveWidth, 250, curveWidth, sideSquare);
+            //context.bezierCurveTo(curveHeight, 250,curveWidth, 250, curveWidth, curveHeight);
+        </script>
+    </body>
+</html>
